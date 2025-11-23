@@ -7,7 +7,7 @@
 Copy the slash command to your global Claude CLI commands directory:
 
 ```bash
-cp .claude/commands/gttp.md ~/.claude/commands/
+cp gttp.md ~/.claude/commands/
 ```
 
 ## Usage
