@@ -1,5 +1,5 @@
 ---
-allowed-tools: Bash(python3:*)
+allowed-tools: Bash
 argument-hint: [youtube-url]
 description: Summarize YouTube video transcript
 ---
@@ -14,8 +14,28 @@ Otherwise, fetch the transcript using the command below and provide a detailed s
 
 !`python3 -c "
 import sys
+import subprocess
+
+try:
+    from youtube_transcript_api import YouTubeTranscriptApi
+except ImportError:
+    print('Installing youtube_transcript_api...', file=sys.stderr)
+    install_cmd = None
+    if subprocess.run(['command', '-v', 'uv'], capture_output=True).returncode == 0:
+        install_cmd = ['uv', 'tool', 'install', 'youtube_transcript_api']
+    elif subprocess.run(['command', '-v', 'pipx'], capture_output=True).returncode == 0:
+        install_cmd = ['pipx', 'install', 'youtube_transcript_api']
+    else:
+        install_cmd = ['pip3', 'install', '--user', 'youtube_transcript_api']
+
+    result = subprocess.run(install_cmd, capture_output=True)
+    if result.returncode != 0:
+        print(f'Error installing youtube_transcript_api: {result.stderr.decode()}', file=sys.stderr)
+        sys.exit(1)
+
+    from youtube_transcript_api import YouTubeTranscriptApi
+
 import re
-from youtube_transcript_api import YouTubeTranscriptApi
 
 def extract_video_id(url_or_id):
     patterns = [
