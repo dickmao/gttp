@@ -2,11 +2,11 @@
 
 install:
 	@if command -v uv >/dev/null 2>&1; then \
-		uv tool install youtube-transcript-api; \
+		uv tool install --force youtube-transcript-api; \
 	elif command -v pipx >/dev/null 2>&1; then \
-		pipx install youtube-transcript-api; \
+		pipx install --force youtube-transcript-api; \
 	else \
-		pip3 install --user youtube-transcript-api; \
+		pip3 install --user --upgrade youtube-transcript-api; \
 	fi
 	install -d $(HOME)/.claude/commands
 	install -d $(HOME)/.local/bin
