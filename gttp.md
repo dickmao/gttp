@@ -12,7 +12,11 @@ If no YouTube URL was provided above, ask the user for the URL before proceeding
 
 Otherwise, fetch the transcript using the command below and provide a detailed summary.
 
-!`uv run --with youtube-transcript-api python3 ~/.local/bin/gttp.py "$ARGUMENTS"`
+!`if command -v uv >/dev/null 2>&1; then
+  uv run --with youtube-transcript-api python3 ~/.local/bin/gttp.py "$ARGUMENTS"
+else
+  python3 ~/.local/bin/gttp.py "$ARGUMENTS"
+fi`
 
 Based on the full transcript above:
 1. Provide a comprehensive summary organized by main topics

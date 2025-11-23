@@ -34,4 +34,4 @@ After the initial summary, you can:
 
 - Claude CLI
 - Python 3
-- One of: uv, pipx, or pip3 (for auto-installing dependencies)
+- uv (for dependency management)
