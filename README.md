@@ -4,10 +4,8 @@
 
 ## Installation
 
-Copy the slash command to your global Claude CLI commands directory:
-
 ```bash
-cp gttp.md ~/.claude/commands/
+make install
 ```
 
 ## Usage
