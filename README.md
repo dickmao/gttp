@@ -13,14 +13,15 @@ make install
 In any Claude CLI session:
 
 ```bash
-/gttp https://www.youtube.com/watch?v=VIDEO_ID
+/gttp [https://www.youtube.com/watch?v=VIDEO_ID]
 ```
 
+If no URL is provided, Claude will prompt you for one.
+
 The command will:
-1. Auto-install `youtube_transcript_api` if needed (via uv/pipx/pip)
-2. Fetch the full transcript with timestamps
-3. Provide a detailed summary organized by topics
-4. Keep the transcript in context for follow-up queries
+1. Fetch the full transcript with timestamps
+2. Provide a detailed summary organized by topics
+3. Keep the transcript in context for follow-up queries
 
 ## Follow-up queries
 

@@ -1,6 +1,13 @@
 .PHONY: install uninstall
 
 install:
+	@if command -v uv >/dev/null 2>&1; then \
+		uv tool install youtube-transcript-api; \
+	elif command -v pipx >/dev/null 2>&1; then \
+		pipx install youtube-transcript-api; \
+	else \
+		pip3 install --user youtube-transcript-api; \
+	fi
 	install -d $(HOME)/.claude/commands
 	install -d $(HOME)/.local/bin
 	install -m 644 gttp.md $(HOME)/.claude/commands/
