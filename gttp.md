@@ -1,22 +1,14 @@
 ---
-allowed-tools: Bash(python3:*)
+allowed-tools: Bash
 argument-hint: [youtube-url]
 description: Summarize YouTube video transcript
 ---
 
 # YouTube Transcript Summary
 
-$ARGUMENTS
+Fetch the transcript using the command below and provide a detailed summary.
 
-If no YouTube URL was provided above, ask the user for the URL before proceeding.
-
-Otherwise, fetch the transcript using the command below and provide a detailed summary.
-
-!`if command -v uv >/dev/null 2>&1; then
-  uv run --with youtube-transcript-api python3 ~/.local/bin/gttp.py "$ARGUMENTS"
-else
-  python3 ~/.local/bin/gttp.py "$ARGUMENTS"
-fi`
+uv run --with youtube-transcript-api python3 ~/.local/bin/gttp.py $1
 
 Based on the full transcript above:
 1. Provide a comprehensive summary organized by main topics

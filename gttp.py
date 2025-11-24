@@ -25,8 +25,9 @@ if not video_id:
 
 try:
     api = YouTubeTranscriptApi()
-    transcript = api.fetch(video_id)
-    transcript_text = '\n'.join([f"[{int(entry.start//60):02d}:{int(entry.start%60):02d}] {entry.text}" for entry in transcript])
+    transcript_list = api.list(video_id)
+    transcript = transcript_list.find_transcript([t.language_code for t in transcript_list])
+    transcript_text = '\n'.join([f"[{int(entry.start//60):02d}:{int(entry.start%60):02d}] {entry.text}" for entry in transcript.fetch()])
     print(transcript_text)
 except Exception as e:
     print(f"Error: {e}", file=sys.stderr)
