@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import sys
 import re
-from youtube_transcript_api import YouTubeTranscriptApi
+from youtube_transcript_api import YouTubeTranscriptApi, NoTranscriptFound
 
 def extract_video_id(url_or_id):
     patterns = [
@@ -26,7 +26,11 @@ if not video_id:
 try:
     api = YouTubeTranscriptApi()
     transcript_list = api.list(video_id)
-    transcript = transcript_list.find_transcript([t.language_code for t in transcript_list])
+    codes = [t.language_code for t in transcript_list if t.is_generated] + [t.language_code for t in transcript_list]
+    try:
+        transcript = transcript_list.find_manually_created_transcript(codes)
+    except NoTranscriptFound:
+        transcript = transcript_list.find_generated_transcript(codes)
     transcript_text = '\n'.join([f"[{int(entry.start//60):02d}:{int(entry.start%60):02d}] {entry.text}" for entry in transcript.fetch()])
     print(transcript_text)
 except Exception as e:
