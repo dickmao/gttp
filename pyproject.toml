@@ -3,3 +3,7 @@ name = "gttp"
 version = "0"
 requires-python = ">=3.9"
 dependencies = ["youtube-transcript-api"]
+
+[tool.pyright]
+venvPath = "."
+venv = ".venv"
