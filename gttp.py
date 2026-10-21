@@ -14,6 +14,34 @@ def extract_video_id(url_or_id):
             return match.group(1)
     return None
 
+def find(o, key):
+    if isinstance(o, dict):
+        for k, v in o.items():
+            if k == key:
+                yield v
+            else:
+                yield from find(v, key)
+    elif isinstance(o, list):
+        for v in o:
+            yield from find(v, key)
+
+def fetch_comments(api, video_id, limit=300):
+    fetcher = api._fetcher
+    html = fetcher._fetch_video_html(video_id)
+    url = f"https://www.youtube.com/youtubei/v1/next?key={fetcher._extract_innertube_api_key(html, video_id)}"
+    version = re.search(r'"INNERTUBE_CONTEXT_CLIENT_VERSION":"([^"]+)"', html).group(1)
+    context = {'client': {'clientName': 'WEB', 'clientVersion': version}}
+    post = lambda body: fetcher._http_client.post(url, json={'context': context, **body}).json()
+    sections = [s for s in find(post({'videoId': video_id}), 'itemSectionRenderer') if s.get('sectionIdentifier') == 'comment-item-section']
+    token = next(find(sections, 'token'), None)
+    comments = []
+    while token and len(comments) < limit:
+        data = post({'continuation': token})
+        comments += [c for c in find(data, 'commentEntityPayload') if '.' not in c['properties']['commentId']]
+        items = [i for a in find(data, 'continuationItems') for i in a if 'continuationItemRenderer' in i]
+        token = next(find(items, 'token'), None)
+    return comments[:limit]
+
 if len(sys.argv) < 2:
     print("Error: No YouTube URL or video ID provided", file=sys.stderr)
     sys.exit(1)
@@ -33,6 +61,10 @@ try:
         transcript = transcript_list.find_generated_transcript(codes)
     transcript_text = '\n'.join([f"[{int(entry.start//60):02d}:{int(entry.start%60):02d}] {entry.text}" for entry in transcript.fetch()])
     print(transcript_text)
+    print("\n=== COMMENTS ===")
+    for c in fetch_comments(api, video_id):
+        text = c['properties']['content']['content'].replace('\n', ' ')
+        print(f"[{c['toolbar']['likeCountNotliked'].strip() or 0}] {c['author']['displayName']}: {text}")
 except Exception as e:
     print(f"Error: {e}", file=sys.stderr)
     sys.exit(1)
