@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import sys
 import re
-from youtube_transcript_api import YouTubeTranscriptApi, NoTranscriptFound
+from youtube_transcript_api import YouTubeTranscriptApi
 
 def extract_video_id(url_or_id):
     patterns = [
@@ -54,11 +54,10 @@ if not video_id:
 try:
     api = YouTubeTranscriptApi()
     transcript_list = api.list(video_id)
-    codes = [t.language_code for t in transcript_list if t.is_generated] + [t.language_code for t in transcript_list]
-    try:
-        transcript = transcript_list.find_manually_created_transcript(codes)
-    except NoTranscriptFound:
-        transcript = transcript_list.find_generated_transcript(codes)
+    manual = [t for t in transcript_list if not t.is_generated]
+    generated = [t for t in transcript_list if t.is_generated]
+    pick = lambda ts: next((t for t in ts if t.language_code.startswith('en')), ts[0] if ts else None)
+    transcript = pick(manual) or pick(generated)
     transcript_text = '\n'.join([f"[{int(entry.start//60):02d}:{int(entry.start%60):02d}] {entry.text}" for entry in transcript.fetch()])
     print(transcript_text)
     print("\n=== COMMENTS ===")
