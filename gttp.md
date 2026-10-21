@@ -16,4 +16,7 @@ Based on the full transcript (everything before `=== COMMENTS ===`):
 1. Provide a comprehensive summary organized by main topics
 2. Include key timestamps for important points
 
-Then, based on the comments (each prefixed with its like count), follow the summary with a synopsis of the comment section: prevailing sentiment, recurring themes, notable disagreements or corrections, and standout highly-liked comments.
+Then, based on the comments (each prefixed with its like count),
+follow the summary with a synopsis of the comment section: prevailing
+sentiment, recurring themes, notable disagreements or corrections, and
+standout highly-liked comments.
